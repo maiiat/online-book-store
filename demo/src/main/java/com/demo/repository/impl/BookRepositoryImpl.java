@@ -35,7 +35,7 @@ public class BookRepositoryImpl implements BookRepository {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new EntityNotFoundException("Can't insert book " + book, e);
+            throw new RuntimeException("Can't insert book " + book, e);
         } finally {
             if (session != null) {
                 session.close();
@@ -51,7 +51,7 @@ public class BookRepositoryImpl implements BookRepository {
             criteriaQuery.from(Book.class);
             return session.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
-            throw new EntityNotFoundException("Can't find all books", e);
+            throw new RuntimeException("Can't find all books", e);
         }
     }
 
@@ -60,7 +60,7 @@ public class BookRepositoryImpl implements BookRepository {
         try (Session session = sessionFactory.openSession()) {
             return Optional.ofNullable(session.get(Book.class, id));
         } catch (Exception e) {
-            throw new EntityNotFoundException("Can't find a book by id: " + id, e);
+            throw new RuntimeException("Can't find a book by id: " + id, e);
         }
     }
 }
