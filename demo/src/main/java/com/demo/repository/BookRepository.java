@@ -2,10 +2,13 @@ package com.demo.repository;
 
 import com.demo.model.Book;
 import java.util.List;
+import java.util.Optional;
 
 public interface BookRepository {
     Book save(Book book);
 
-    List findAll();
+    List<Book> findAll();
+
+    Optional<Book> findById(Long id);
 }
 
