@@ -16,4 +16,3 @@ public interface BookService {
 
     void deleteById(Long id);
 }
-
