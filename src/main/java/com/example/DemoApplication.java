@@ -1,6 +1,6 @@
-package com.demo;
+package com.example;
 
-import com.demo.service.BookService;
+import com.example.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

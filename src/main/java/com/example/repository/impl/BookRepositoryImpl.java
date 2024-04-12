@@ -1,7 +1,7 @@
-package com.demo.repository.impl;
+package com.example.repository.impl;
 
-import com.demo.model.Book;
-import com.demo.repository.BookRepository;
+import com.example.model.Book;
+import com.example.repository.BookRepository;
 import jakarta.persistence.criteria.CriteriaQuery;
 import java.util.List;
 import java.util.Optional;

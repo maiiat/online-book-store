@@ -1,12 +1,12 @@
-package com.demo.service.impl;
+package com.example.service.impl;
 
-import com.demo.dto.BookDto;
-import com.demo.dto.CreateBookRequestDto;
-import com.demo.exception.EntityNotFoundException;
-import com.demo.mapper.BookMapper;
-import com.demo.model.Book;
-import com.demo.repository.BookRepository;
-import com.demo.service.BookService;
+import com.example.dto.BookDto;
+import com.example.dto.CreateBookRequestDto;
+import com.example.exception.EntityNotFoundException;
+import com.example.mapper.BookMapper;
+import com.example.model.Book;
+import com.example.repository.BookRepository;
+import com.example.service.BookService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

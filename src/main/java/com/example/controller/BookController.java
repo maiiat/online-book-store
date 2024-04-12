@@ -1,8 +1,8 @@
-package com.demo.controller;
+package com.example.controller;
 
-import com.demo.dto.BookDto;
-import com.demo.dto.CreateBookRequestDto;
-import com.demo.service.BookService;
+import com.example.dto.BookDto;
+import com.example.dto.CreateBookRequestDto;
+import com.example.service.BookService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

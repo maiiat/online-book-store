@@ -1,4 +1,4 @@
-package com.demo.config;
+package com.example.config;
 
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.NullValueCheckStrategy;

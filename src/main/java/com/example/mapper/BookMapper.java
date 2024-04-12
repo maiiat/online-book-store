@@ -1,9 +1,9 @@
-package com.demo.mapper;
+package com.example.mapper;
 
-import com.demo.config.MapperConfig;
-import com.demo.dto.BookDto;
-import com.demo.dto.CreateBookRequestDto;
-import com.demo.model.Book;
+import com.example.config.MapperConfig;
+import com.example.dto.BookDto;
+import com.example.dto.CreateBookRequestDto;
+import com.example.model.Book;
 import org.mapstruct.Mapper;
 
 @Mapper(config = MapperConfig.class)
