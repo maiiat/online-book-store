@@ -1,6 +1,5 @@
 package com.demo.repository.impl;
 
-import com.demo.exception.EntityNotFoundException;
 import com.demo.model.Book;
 import com.demo.repository.BookRepository;
 import jakarta.persistence.criteria.CriteriaQuery;
