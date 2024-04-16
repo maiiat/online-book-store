@@ -2,8 +2,7 @@ package com.example.mapper;
 
 import com.example.config.MapperConfig;
 import com.example.dto.BookDto;
-import com.example.dto.CreateBookRequestDto;
-import com.example.dto.UpdateBookRequestDto;
+import com.example.dto.CreateUpdateBookRequestDto;
 import com.example.model.Book;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -12,8 +11,8 @@ import org.mapstruct.MappingTarget;
 public interface BookMapper {
     BookDto toDto(Book book);
 
-    Book toModel(CreateBookRequestDto createBookRequestDto);
+    Book toModel(CreateUpdateBookRequestDto createUpdateBookRequestDto);
 
-    Book updateEntityFromUpdateRequestDto(UpdateBookRequestDto updateBookRequestDto,
+    Book updateEntityFromUpdateRequestDto(CreateUpdateBookRequestDto updateBookRequestDto,
                                           @MappingTarget Book entity);
 }

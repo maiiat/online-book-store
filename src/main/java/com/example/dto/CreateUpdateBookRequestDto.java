@@ -1,23 +1,23 @@
 package com.example.dto;
 
 import com.example.validation.Isbn;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
-public class CreateBookRequestDto {
-    @NotNull
+public class CreateUpdateBookRequestDto {
+    @NotBlank
     private String title;
-    @NotNull
+    @NotBlank
     private String author;
-    @NotNull
+    @NotBlank
     @Isbn
     private String isbn;
     private String description;
     private String coverImage;
-    @NotNull
-    @Min(0)
+    @NotBlank
+    @Positive
     private BigDecimal price;
 }

@@ -18,13 +18,12 @@ public class IsbnValidator implements ConstraintValidator<Isbn, String> {
 
     @Override
     public void initialize(Isbn constraintAnnotation) {
-        // initialization logic if needed
     }
 
     @Override
     public boolean isValid(String isbn, ConstraintValidatorContext context) {
         if (isbn == null) {
-            return true; // @NotNull should handle null case
+            return true;
         }
 
         if (!pattern.matcher(isbn).matches()) {
