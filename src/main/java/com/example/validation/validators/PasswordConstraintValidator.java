@@ -23,9 +23,9 @@ public class PasswordConstraintValidator implements ConstraintValidator<Password
             return true;
         } else {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("Password must be at least "
-                    + "8 characters long, include an uppercase letter "
-                    + "and a special character")
+            context.buildConstraintViolationWithTemplate("""
+                Password must be at least 8 characters long, include an uppercase letter,
+                and a special character""")
                     .addConstraintViolation();
             return false;
         }
