@@ -24,6 +24,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public boolean isUserEmailExists(String email) {
-        return userRepository.existsByEmail(email);
+        return userRepository.existsByEmailIgnoreCase(email);
     }
 }
