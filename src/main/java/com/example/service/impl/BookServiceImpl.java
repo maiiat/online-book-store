@@ -4,6 +4,7 @@ import com.example.dto.book.BookDto;
 import com.example.dto.book.BookSearchParameters;
 import com.example.dto.book.CreateUpdateBookRequestDto;
 import com.example.exception.EntityNotFoundException;
+import com.example.exception.IsbnAlreadyExistException;
 import com.example.mapper.BookMapper;
 import com.example.model.Book;
 import com.example.repository.book.BookRepository;
@@ -24,6 +25,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto save(CreateUpdateBookRequestDto createUpdateBookRequestDto) {
+        checkIfIsbnExistsOrThrowException(createUpdateBookRequestDto.isbn());
         Book book = bookMapper.toModel(createUpdateBookRequestDto);
         Book savedBook = bookRepository.save(book);
         return bookMapper.toDto(savedBook);
@@ -32,8 +34,8 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDto> findAll(Pageable pageable) {
         return bookRepository.findAll(pageable).stream()
-                .map(bookMapper::toDto)
-                .toList();
+            .map(bookMapper::toDto)
+            .toList();
     }
 
     @Override
@@ -47,6 +49,11 @@ public class BookServiceImpl implements BookService {
     public BookDto updateById(Long id, CreateUpdateBookRequestDto updateBookRequestDto) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find book by id: " + id));
+
+        String isbn = updateBookRequestDto.isbn();
+        if (!book.getIsbn().equals(isbn)) {
+            checkIfIsbnExistsOrThrowException(isbn);
+        }
         Book updatedBook = bookRepository
                 .save(bookMapper.updateEntityFromUpdateRequestDto(updateBookRequestDto, book));
         return bookMapper.toDto(updatedBook);
@@ -62,13 +69,13 @@ public class BookServiceImpl implements BookService {
         Specification<Book> bookSpecification = bookSpecificationBuilder
                 .build(bookSearchParameters);
         return bookRepository.findAll(bookSpecification).stream()
-                .map(bookMapper::toDto)
-                .toList();
+            .map(bookMapper::toDto)
+            .toList();
     }
 
-    @Override
-    public boolean isIsbnExists(String isbn) {
-        return bookRepository.existsByIsbn(isbn);
+    private void checkIfIsbnExistsOrThrowException(String isbn) {
+        if (bookRepository.existsByIsbn(isbn)) {
+            throw new IsbnAlreadyExistException("such ISBN already exist: " + isbn);
+        }
     }
-
 }

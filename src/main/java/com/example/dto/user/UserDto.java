@@ -1,12 +1,11 @@
 package com.example.dto.user;
 
-import lombok.Data;
-
-@Data
-public class UserDto {
-    private Long id;
-    private String email;
-    private String firstName;
-    private String lastName;
-    private String shippingAddress;
+public record UserDto(
+        Long id,
+        String email,
+        String firstName,
+        String lastName,
+        String shippingAddress
+) {
 }
+

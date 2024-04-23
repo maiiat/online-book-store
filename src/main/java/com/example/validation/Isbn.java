@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Isbn {
-    String message() default "invalid ISBN";
+    String message() default "invalid ISBN format";
 
     Class<?>[] groups() default {};
 

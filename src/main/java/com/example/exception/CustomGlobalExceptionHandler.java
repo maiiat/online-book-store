@@ -12,31 +12,37 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler({IsbnAlreadyExistException.class, EmailAlreadyExistException.class})
+    public ResponseEntity<Object> exceptionToBeHandled(RuntimeException ex, WebRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST);
+        body.put("errors", List.of(ex.getMessage()));
+        body.put("path", getPath(request));
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
             HttpHeaders headers,
             HttpStatusCode status,
             WebRequest request) {
-
         Map<String, Object> body = new LinkedHashMap<>();
-
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.BAD_REQUEST);
-
         List<String> errors = ex.getBindingResult().getAllErrors().stream()
                 .map(this::getErrorMessage)
                 .toList();
         body.put("errors", errors);
-
-        String path = request.getDescription(false).replace("uri=", "");
-        body.put("path", path);
-
+        body.put("path", getPath(request));
         return new ResponseEntity<>(body, headers, status);
     }
 
@@ -47,5 +53,9 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
             return "field:'" + field + "' " + message;
         }
         return e.getDefaultMessage();
+    }
+
+    private String getPath(WebRequest request) {
+        return request.getDescription(false).replace("uri=", "");
     }
 }

@@ -2,7 +2,7 @@ package com.example.controller;
 
 import com.example.dto.user.UserDto;
 import com.example.dto.user.UserRegistrationRequestDto;
-import com.example.service.AuthenticationService;
+import com.example.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -19,14 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
-    private final AuthenticationService authenticationService;
+    private final UserService userService;
 
     @PostMapping("/registration")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Register a new user",
             description = "Register a new user")
-    public UserDto createBook(@RequestBody
+    public UserDto registerUser(@RequestBody
                                   @Valid UserRegistrationRequestDto userRegistrationRequestDto) {
-        return authenticationService.register(userRegistrationRequestDto);
+        return userService.register(userRegistrationRequestDto);
     }
 }

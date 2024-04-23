@@ -4,25 +4,20 @@ import com.example.validation.Email;
 import com.example.validation.FieldMatch;
 import com.example.validation.Password;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import jakarta.validation.constraints.Size;
 
-@FieldMatch.List({
-    @FieldMatch(first = "password", second = "repeatPassword",
-        message = "the 'password' and 'repeatPassword' fields don't match")
-})
-@Data
-public class UserRegistrationRequestDto {
-    @NotBlank
-    @Email
-    private String email;
-    @NotBlank
-    @Password
-    private String password;
-    @NotBlank
-    private String repeatPassword;
-    @NotBlank
-    private String firstName;
-    @NotBlank
-    private String lastName;
-    private String shippingAddress;
+@FieldMatch(
+        first = "password",
+        second = "repeatedPassword",
+        message = "Password and repeated password must be equal"
+)
+public record UserRegistrationRequestDto(
+        @NotBlank @Email @Size(max = 255) String email,
+        @NotBlank @Password String password,
+        @NotBlank String repeatedPassword,
+        @NotBlank @Size(max = 255) String firstName,
+        @NotBlank @Size(max = 255) String lastName,
+        @Size(max = 255)
+        String shippingAddress
+) {
 }

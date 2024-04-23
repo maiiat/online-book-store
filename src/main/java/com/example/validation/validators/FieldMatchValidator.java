@@ -3,32 +3,23 @@ package com.example.validation.validators;
 import com.example.validation.FieldMatch;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import java.lang.reflect.InvocationTargetException;
-import org.apache.commons.beanutils.BeanUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Objects;
+import org.springframework.beans.BeanWrapperImpl;
 
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(FieldMatchValidator.class);
-    private String firstFieldName;
-    private String secondFieldName;
+    private String field;
+    private String fieldMatch;
 
     @Override
     public void initialize(FieldMatch constraintAnnotation) {
-        firstFieldName = constraintAnnotation.first();
-        secondFieldName = constraintAnnotation.second();
+        field = constraintAnnotation.first();
+        fieldMatch = constraintAnnotation.second();
     }
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
-        try {
-            final Object firstObj = BeanUtils.getProperty(value, firstFieldName);
-            final Object secondObj = BeanUtils.getProperty(value, secondFieldName);
-
-            return firstObj != null && firstObj.equals(secondObj);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            LOGGER.error("Error accessing properties in FieldMatchValidator", e);
-            return false;
-        }
+        Object field = new BeanWrapperImpl(value).getPropertyValue(this.field);
+        Object fieldMatch = new BeanWrapperImpl(value).getPropertyValue(this.fieldMatch);
+        return Objects.equals(field, fieldMatch);
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class IsbnValidator implements ConstraintValidator<Isbn, String> {
 
-    private static final Pattern pattern = Pattern.compile(
+    private static final Pattern ISBN_PATTERN = Pattern.compile(
             "^(?:ISBN(?:-10)?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[- ]){3})"
                     + "[- 0-9X]{13}$)[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9X]$"
     );
@@ -23,23 +23,8 @@ public class IsbnValidator implements ConstraintValidator<Isbn, String> {
 
     @Override
     public boolean isValid(String isbn, ConstraintValidatorContext context) {
-        if (isbn == null) {
-            return true;
-        }
-
-        if (!pattern.matcher(isbn).matches()) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("invalid ISBN format")
-                    .addConstraintViolation();
-            return false;
-        }
-
-        if (bookService.isIsbnExists(isbn)) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("such ISBN already exist")
-                    .addConstraintViolation();
-            return false;
-        }
-        return true;
+        return isbn != null && ISBN_PATTERN
+            .matcher(isbn)
+            .matches();
     }
 }

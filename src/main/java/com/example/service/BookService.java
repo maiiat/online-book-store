@@ -18,7 +18,4 @@ public interface BookService {
     void deleteById(Long id);
 
     List<BookDto> search(BookSearchParameters bookSearchParameters);
-
-    public boolean isIsbnExists(String isbn);
-
 }
