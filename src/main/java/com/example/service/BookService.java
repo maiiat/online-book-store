@@ -1,8 +1,8 @@
 package com.example.service;
 
-import com.example.dto.BookDto;
-import com.example.dto.BookSearchParameters;
-import com.example.dto.CreateUpdateBookRequestDto;
+import com.example.dto.book.BookDto;
+import com.example.dto.book.BookSearchParameters;
+import com.example.dto.book.CreateUpdateBookRequestDto;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 
@@ -18,7 +18,4 @@ public interface BookService {
     void deleteById(Long id);
 
     List<BookDto> search(BookSearchParameters bookSearchParameters);
-
-    public boolean isIsbnExists(String isbn);
-
 }
