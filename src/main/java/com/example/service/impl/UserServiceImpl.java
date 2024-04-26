@@ -19,19 +19,19 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDto register(UserRegistrationRequestDto userRegistrationRequestDto) {
-        checkIfEmailExistsOrThrowException(userRegistrationRequestDto.email());
+    public UserDto register(UserRegistrationRequestDto uaer) {
+        checkIfEmailExists(uaer.email());
         User user = new User();
-        user.setPassword(passwordEncoder.encode(userRegistrationRequestDto.password()));
-        user.setEmail(userRegistrationRequestDto.email());
-        user.setFirstName(userRegistrationRequestDto.firstName());
-        user.setLastName(userRegistrationRequestDto.lastName());
-        user.setShippingAddress(userRegistrationRequestDto.shippingAddress());
+        user.setPassword(passwordEncoder.encode(uaer.password()));
+        user.setEmail(uaer.email());
+        user.setFirstName(uaer.firstName());
+        user.setLastName(uaer.lastName());
+        user.setShippingAddress(uaer.shippingAddress());
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
     }
 
-    private void checkIfEmailExistsOrThrowException(String email) {
+    private void checkIfEmailExists(String email) {
         if (userRepository.existsByEmailIgnoreCase(email)) {
             throw new EmailAlreadyExistException("Such email already exist: " + email);
         }
