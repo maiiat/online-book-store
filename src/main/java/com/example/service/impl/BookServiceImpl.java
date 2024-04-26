@@ -40,19 +40,16 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto findById(Long id) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can't find book by id: " + id));
+        Book book = findBookByIdOrThrowException(id);
         return bookMapper.toDto(book);
     }
 
     @Override
     public BookDto updateById(Long id, CreateUpdateBookRequestDto updateBookRequestDto) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can't find book by id: " + id));
-
-        String isbn = updateBookRequestDto.isbn();
-        if (!book.getIsbn().equals(isbn)) {
-            checkIfIsbnExistsOrThrowException(isbn);
+        Book book = findBookByIdOrThrowException(id);
+        String isbnPassedInRequest = updateBookRequestDto.isbn();
+        if (!book.getIsbn().equals(isbnPassedInRequest)) {
+            checkIfIsbnExistsOrThrowException(isbnPassedInRequest);
         }
         Book updatedBook = bookRepository
                 .save(bookMapper.updateEntityFromUpdateRequestDto(updateBookRequestDto, book));
@@ -61,7 +58,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteById(Long id) {
-        bookRepository.deleteById(id);
+        Book book = findBookByIdOrThrowException(id);
+        bookRepository.deleteById(book.getId());
     }
 
     @Override
@@ -75,7 +73,12 @@ public class BookServiceImpl implements BookService {
 
     private void checkIfIsbnExistsOrThrowException(String isbn) {
         if (bookRepository.existsByIsbn(isbn)) {
-            throw new IsbnAlreadyExistException("such ISBN already exist: " + isbn);
+            throw new IsbnAlreadyExistException("Such ISBN already exist: " + isbn);
         }
+    }
+
+    private Book findBookByIdOrThrowException(Long id) {
+        return bookRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Can't find book by id: " + id));
     }
 }

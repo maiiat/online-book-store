@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: upsert-admin-user
+      author: demo
+      changes:
+        - sql:
+            dbms: mysql
+            sql: >
+              INSERT INTO users (email, password, first_name, last_name)
+              VALUES ('admin@example.com',
+              '$2a$10$NWKzYIk5vKNcAmE42OMFjejGus3qkQRnnXP1XKZlhGvOaie448bfS',
+              'Admin', 'Admin')
+              ON DUPLICATE KEY UPDATE
+              password = VALUES(password),
+              first_name = VALUES(first_name), 
+              last_name = VALUES(last_name);
+        - sql:
+            dbms: h2
+            sql: >
+              MERGE INTO users (email, password, first_name, last_name) KEY(email)
+              VALUES ('admin@example.com',
+              '$2a$10$NWKzYIk5vKNcAmE42OMFjejGus3qkQRnnXP1XKZlhGvOaie448bfS',
+              'Admin', 'Admin');
+        - sql:
+            dbms: mysql
+            sql: >
+              INSERT INTO users_roles (user_id, role_id)
+              SELECT u.id, r.id FROM users u, roles r
+              WHERE u.email = 'admin@example.com' AND r.name = 'ADMIN'
+              ON DUPLICATE KEY UPDATE role_id = VALUES(role_id);
+        - sql:
+            dbms: h2
+            sql: >
+              MERGE INTO users_roles (user_id, role_id) KEY(user_id, role_id)
+              SELECT u.id, r.id FROM users u JOIN roles r ON r.name = 'ADMIN'
+              WHERE u.email = 'admin@example.com';
