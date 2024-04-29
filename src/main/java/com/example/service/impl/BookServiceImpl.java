@@ -25,7 +25,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto save(CreateUpdateBookRequestDto createUpdateBookRequestDto) {
-        checkIfIsbnExistsOrThrowException(createUpdateBookRequestDto.isbn());
+        checkIfIsbnExists(createUpdateBookRequestDto.isbn());
         Book book = bookMapper.toModel(createUpdateBookRequestDto);
         Book savedBook = bookRepository.save(book);
         return bookMapper.toDto(savedBook);
@@ -40,19 +40,16 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto findById(Long id) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can't find book by id: " + id));
+        Book book = findBookById(id);
         return bookMapper.toDto(book);
     }
 
     @Override
     public BookDto updateById(Long id, CreateUpdateBookRequestDto updateBookRequestDto) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can't find book by id: " + id));
-
-        String isbn = updateBookRequestDto.isbn();
-        if (!book.getIsbn().equals(isbn)) {
-            checkIfIsbnExistsOrThrowException(isbn);
+        Book book = findBookById(id);
+        String isbnPassedInRequest = updateBookRequestDto.isbn();
+        if (!book.getIsbn().equals(isbnPassedInRequest)) {
+            checkIfIsbnExists(isbnPassedInRequest);
         }
         Book updatedBook = bookRepository
                 .save(bookMapper.updateEntityFromUpdateRequestDto(updateBookRequestDto, book));
@@ -61,7 +58,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteById(Long id) {
-        bookRepository.deleteById(id);
+        Book book = findBookById(id);
+        bookRepository.deleteById(book.getId());
     }
 
     @Override
@@ -73,9 +71,14 @@ public class BookServiceImpl implements BookService {
             .toList();
     }
 
-    private void checkIfIsbnExistsOrThrowException(String isbn) {
+    private void checkIfIsbnExists(String isbn) {
         if (bookRepository.existsByIsbn(isbn)) {
-            throw new IsbnAlreadyExistException("such ISBN already exist: " + isbn);
+            throw new IsbnAlreadyExistException("Such ISBN already exist: " + isbn);
         }
+    }
+
+    private Book findBookById(Long id) {
+        return bookRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Can't find book by id: " + id));
     }
 }

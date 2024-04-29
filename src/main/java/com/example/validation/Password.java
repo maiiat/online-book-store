@@ -14,7 +14,8 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Password {
-    String message() default "field has invalid value";
+    String message() default "field has invalid value. "
+        + "Password must include an uppercase letter and a special character";
 
     Class<?>[] groups() default {};
 

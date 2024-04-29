@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -19,12 +20,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({IsbnAlreadyExistException.class, EmailAlreadyExistException.class})
+    @ExceptionHandler({
+            IsbnAlreadyExistException.class,
+            EmailAlreadyExistException.class,
+            EntityNotFoundException.class})
     public ResponseEntity<Object> exceptionToBeHandled(RuntimeException ex, WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.BAD_REQUEST);
-        body.put("errors", List.of(ex.getMessage()));
+        body.put("errors", Stream.of(ex.getMessage()));
         body.put("path", getPath(request));
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
@@ -40,6 +44,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         body.put("status", HttpStatus.BAD_REQUEST);
         List<String> errors = ex.getBindingResult().getAllErrors().stream()
                 .map(this::getErrorMessage)
+                .sorted()
                 .toList();
         body.put("errors", errors);
         body.put("path", getPath(request));
