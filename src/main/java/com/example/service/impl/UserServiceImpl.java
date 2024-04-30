@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     public UserDto register(UserRegistrationRequestDto userRequest) {
         checkIfEmailAlreadyExists(userRequest.email());
         User user = userMapper.toModel(userRequest);
-        user.setRoles(Set.of(roleRepository.findAllByName(Role.RoleName.USER.name()).get()));
+        user.setRoles(Set.of(roleRepository.findByName(Role.RoleName.USER).get()));
         user.setPassword(passwordEncoder.encode(userRequest.password()));
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
