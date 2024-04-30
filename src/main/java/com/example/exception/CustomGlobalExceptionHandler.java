@@ -22,7 +22,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     @ExceptionHandler({
             IsbnAlreadyExistException.class,
-            EmailAlreadyExistException.class,
+            RegistrationException.class,
             EntityNotFoundException.class})
     public ResponseEntity<Object> handleCustomException(
             RuntimeException ex,
