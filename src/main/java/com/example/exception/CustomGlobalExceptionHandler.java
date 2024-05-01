@@ -22,15 +22,29 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     @ExceptionHandler({
             IsbnAlreadyExistException.class,
-            EmailAlreadyExistException.class,
+            RegistrationException.class,
             EntityNotFoundException.class})
-    public ResponseEntity<Object> exceptionToBeHandled(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleCustomException(
+            RuntimeException ex,
+            WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.BAD_REQUEST);
         body.put("errors", Stream.of(ex.getMessage()));
         body.put("path", getPath(request));
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidLoginException.class)
+    public ResponseEntity<Object> handleInvalidLoginException(
+            RuntimeException ex,
+            WebRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.UNAUTHORIZED);
+        body.put("errors", Stream.of(ex.getMessage()));
+        body.put("path", getPath(request));
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
 
     @Override
