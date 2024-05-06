@@ -1,5 +1,7 @@
 package com.example.exception.handler;
 
+import com.example.exception.BookAlreadyAddedToCartException;
+import com.example.exception.CartItemAbsenceException;
 import com.example.exception.CategoryAlreadyExistException;
 import com.example.exception.EntityNotFoundException;
 import com.example.exception.InvalidLoginException;
@@ -46,10 +48,12 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     @ExceptionHandler({
-            IsbnAlreadyExistException.class,
-            RegistrationException.class,
+            BookAlreadyAddedToCartException.class,
+            CartItemAbsenceException.class,
+            CategoryAlreadyExistException.class,
             EntityNotFoundException.class,
-            CategoryAlreadyExistException.class})
+            IsbnAlreadyExistException.class,
+            RegistrationException.class})
     public ResponseEntity<Object> handleCustomException(
             RuntimeException ex,
             WebRequest request) {
