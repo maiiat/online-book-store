@@ -1,6 +1,7 @@
 package com.example.service.impl;
 
 import com.example.dto.book.BookDto;
+import com.example.dto.book.BookDtoWithoutCategoryIds;
 import com.example.dto.book.BookSearchParameters;
 import com.example.dto.book.CreateUpdateBookRequestDto;
 import com.example.exception.EntityNotFoundException;
@@ -25,7 +26,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto save(CreateUpdateBookRequestDto createUpdateBookRequestDto) {
-        checkIfIsbnExists(createUpdateBookRequestDto.isbn());
+        checkIfIsbnExists(createUpdateBookRequestDto.getIsbn());
         Book book = bookMapper.toModel(createUpdateBookRequestDto);
         Book savedBook = bookRepository.save(book);
         return bookMapper.toDto(savedBook);
@@ -47,7 +48,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto updateById(Long id, CreateUpdateBookRequestDto updateBookRequestDto) {
         Book book = findBookById(id);
-        String isbnPassedInRequest = updateBookRequestDto.isbn();
+        String isbnPassedInRequest = updateBookRequestDto.getIsbn();
         if (!book.getIsbn().equals(isbnPassedInRequest)) {
             checkIfIsbnExists(isbnPassedInRequest);
         }
@@ -68,6 +69,13 @@ public class BookServiceImpl implements BookService {
                 .build(bookSearchParameters);
         return bookRepository.findAll(bookSpecification).stream()
             .map(bookMapper::toDto)
+            .toList();
+    }
+
+    @Override
+    public List<BookDtoWithoutCategoryIds> findAllByCategoryId(Long id, Pageable pageable) {
+        return bookRepository.findAllByCategoryId(id, pageable).stream()
+            .map(bookMapper::toDtoWithoutCategories)
             .toList();
     }
 

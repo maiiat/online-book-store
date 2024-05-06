@@ -1,5 +1,13 @@
-package com.example.exception;
+package com.example.exception.handler;
 
+import com.example.exception.CategoryAlreadyExistException;
+import com.example.exception.EntityNotFoundException;
+import com.example.exception.InvalidLoginException;
+import com.example.exception.IsbnAlreadyExistException;
+import com.example.exception.RegistrationException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,10 +28,28 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    public static void handleUnauthorizedServletLevelException(
+            HttpServletResponse response,
+            RuntimeException e,
+            HttpServletRequest request) throws IOException {
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        String errorJson = String.format("{\"timestamp\": \"%s\", "
+                + "\"status\": \"%s\", \"errors\": [\"%s\"], \"path\": \"%s\"}",
+                LocalDateTime.now(),
+                HttpStatus.UNAUTHORIZED,
+                e.getMessage(),
+                request.getRequestURI());
+        response.getWriter().write(errorJson);
+        response.getWriter().flush();
+    }
+
     @ExceptionHandler({
             IsbnAlreadyExistException.class,
             RegistrationException.class,
-            EntityNotFoundException.class})
+            EntityNotFoundException.class,
+            CategoryAlreadyExistException.class})
     public ResponseEntity<Object> handleCustomException(
             RuntimeException ex,
             WebRequest request) {
