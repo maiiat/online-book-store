@@ -1,15 +1,14 @@
 package com.example.dto.cartitem;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 @Data
 public class CreateCartItemRequestDto {
-    @Min(1)
+    @Positive
     @NotNull
     private Long bookId;
-    @Min(1)
-    @NotNull
+    @Positive
     private Integer quantity;
 }

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Shopping cart management",
@@ -31,6 +33,7 @@ public class ShoppingCartController {
     @Operation(summary = "Add cart item to user's cart",
             description = "Create and add cart item to user's cart")
     @PreAuthorize("hasRole('USER')")
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ShoppingCartResponseDto createCartItem(
             Authentication authentication,
@@ -65,12 +68,13 @@ public class ShoppingCartController {
     @Operation(summary = "Delete cart item by id",
             description = "Delete cart item by id from user's shopping cart")
     @PreAuthorize("hasRole('USER')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/cart-items/{cartItemId}")
-    public ShoppingCartResponseDto deleteCartItem(
+    public void deleteCartItem(
             Authentication authentication,
             @PathVariable Long cartItemId
     ) {
         User user = (User) authentication.getPrincipal();
-        return shoppingCartService.deleteCartItem(user.getId(), cartItemId);
+        shoppingCartService.deleteCartItem(user.getId(), cartItemId);
     }
 }

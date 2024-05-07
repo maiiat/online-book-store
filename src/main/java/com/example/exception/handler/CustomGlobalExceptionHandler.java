@@ -1,7 +1,6 @@
 package com.example.exception.handler;
 
 import com.example.exception.BookAlreadyAddedToCartException;
-import com.example.exception.CartItemAbsenceException;
 import com.example.exception.CategoryAlreadyExistException;
 import com.example.exception.EntityNotFoundException;
 import com.example.exception.InvalidLoginException;
@@ -49,7 +48,6 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     @ExceptionHandler({
             BookAlreadyAddedToCartException.class,
-            CartItemAbsenceException.class,
             CategoryAlreadyExistException.class,
             EntityNotFoundException.class,
             IsbnAlreadyExistException.class,
