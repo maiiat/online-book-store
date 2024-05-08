@@ -3,7 +3,7 @@ package com.example.service.impl;
 import com.example.dto.category.CategoryDto;
 import com.example.dto.category.CreateUpdateCategoryRequestDto;
 import com.example.exception.CategoryAlreadyExistException;
-import com.example.exception.IsbnAlreadyExistException;
+import com.example.exception.EntityNotFoundException;
 import com.example.mapper.CategoryMapper;
 import com.example.model.Category;
 import com.example.repository.category.CategoryRepository;
@@ -34,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto save(CreateUpdateCategoryRequestDto createRequestDto) {
-        checkIfCategoryAlreadyExists(createRequestDto.name());
+        checkIfCategoryNameAlreadyExists(createRequestDto.name());
         Category category = categoryMapper.toModel(createRequestDto);
         Category savedCategory = categoryRepository.save(category);
         return categoryMapper.toDto(savedCategory);
@@ -45,10 +45,12 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = findCategoryById(id);
         String requestName = updateCategoryRequestDto.name();
         if (!category.getName().equals(requestName)) {
-            checkIfCategoryAlreadyExists(requestName);
+            checkIfCategoryNameAlreadyExists(requestName);
+            category.setName(requestName);
         }
+        category.setDescription(updateCategoryRequestDto.description());
         Category updatedCategory = categoryRepository
-                .save(categoryMapper.toModel(updateCategoryRequestDto));
+                .save(category);
         return categoryMapper.toDto(updatedCategory);
     }
 
@@ -59,15 +61,15 @@ public class CategoryServiceImpl implements CategoryService {
 
     }
 
-    private void checkIfCategoryAlreadyExists(String categoryName) {
+    private void checkIfCategoryNameAlreadyExists(String categoryName) {
         if (categoryRepository.existsCategoriesByNameIgnoreCase(categoryName)) {
-            throw new IsbnAlreadyExistException("Such category already exist: " + categoryName);
+            throw new CategoryAlreadyExistException("Such category already exist: " + categoryName);
         }
     }
 
     private Category findCategoryById(Long id) {
         return categoryRepository.findById(id)
-            .orElseThrow(() -> new CategoryAlreadyExistException(
+            .orElseThrow(() -> new EntityNotFoundException(
                     "Can't find category by id: " + id));
     }
 }
