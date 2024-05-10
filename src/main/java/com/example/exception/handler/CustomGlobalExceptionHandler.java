@@ -46,10 +46,10 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     @ExceptionHandler({
-            IsbnAlreadyExistException.class,
-            RegistrationException.class,
+            CategoryAlreadyExistException.class,
             EntityNotFoundException.class,
-            CategoryAlreadyExistException.class})
+            IsbnAlreadyExistException.class,
+            RegistrationException.class})
     public ResponseEntity<Object> handleCustomException(
             RuntimeException ex,
             WebRequest request) {

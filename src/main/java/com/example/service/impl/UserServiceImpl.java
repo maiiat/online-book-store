@@ -7,7 +7,9 @@ import com.example.mapper.UserMapper;
 import com.example.model.Role;
 import com.example.model.User;
 import com.example.repository.role.RoleRepository;
+import com.example.repository.shoppingcartrepository.ShoppingCartRepository;
 import com.example.repository.user.UserRepository;
+import com.example.service.ShoppingCartService;
 import com.example.service.UserService;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
+    private final ShoppingCartService shoppingCartService;
 
     @Override
     public UserDto register(UserRegistrationRequestDto userRequest) {
@@ -29,6 +33,7 @@ public class UserServiceImpl implements UserService {
         user.setRoles(Set.of(roleRepository.findByName(Role.RoleName.USER).get()));
         user.setPassword(passwordEncoder.encode(userRequest.password()));
         User savedUser = userRepository.save(user);
+        shoppingCartRepository.save(shoppingCartService.createShoppingCart(user));
         return userMapper.toDto(savedUser);
     }
 

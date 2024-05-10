@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-shopping_carts-table
+      author: demo
+      changes:
+        - createTable:
+            tableName: shopping_carts
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    primaryKey: true
