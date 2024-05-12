@@ -39,18 +39,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderResponseDto> getOrderHistory(User user, Pageable pageable) {
-        return orderRepository.findOrdersByUser(user, pageable).stream()
-            .map(orderMapper::toDto)
-            .toList();
+        return orderMapper.toDto(orderRepository.findOrdersByUser(user, pageable).getContent());
     }
 
     @Override
     public Set<OrderItemResponseDto> getOrderItemsByOrderId(User user, Long orderId) {
-        Order order = getOrderByIdAndUser(user,orderId);
-
-        return order.getOrderItems().stream()
-            .map(orderItemMapper::toDto)
-            .collect(Collectors.toSet());
+        Order order = getOrderByIdAndUser(user, orderId);
+        return orderItemMapper.toDto(order.getOrderItems());
     }
 
     @Override
@@ -58,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
             User user,
             Long orderId,
             Long orderItemId) {
-        Order order = getOrderByIdAndUser(user,orderId);
+        Order order = getOrderByIdAndUser(user, orderId);
 
         return orderItemMapper.toDto(
             orderItemRepository.findOrderItemByOrderIdAndId(order.getId(), orderItemId).orElseThrow(

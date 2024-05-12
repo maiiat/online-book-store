@@ -41,8 +41,7 @@ public class OrderController {
             Authentication authentication,
             Pageable pageable
     ) {
-        User user = (User) authentication.getPrincipal();
-        return orderService.getOrderHistory(user, pageable);
+        return orderService.getOrderHistory(getAuthenticatedUser(authentication), pageable);
     }
 
     @Operation(summary = "Retrieve all Order Items for a specific order",
@@ -53,8 +52,7 @@ public class OrderController {
             Authentication authentication,
             @PathVariable Long orderId
     ) {
-        User user = (User) authentication.getPrincipal();
-        return orderService.getOrderItemsByOrderId(user, orderId);
+        return orderService.getOrderItemsByOrderId(getAuthenticatedUser(authentication), orderId);
     }
 
     @Operation(summary = "Retrieve a specific Order Item within an order",
@@ -66,8 +64,8 @@ public class OrderController {
             @PathVariable Long orderId,
             @PathVariable Long itemId
     ) {
-        User user = (User) authentication.getPrincipal();
-        return orderService.getOrderItemByIdByOrderId(user, orderId, itemId);
+        return orderService.getOrderItemByIdByOrderId(
+            getAuthenticatedUser(authentication), orderId, itemId);
     }
 
     @Operation(summary = "Place an order",
@@ -79,13 +77,12 @@ public class OrderController {
             Authentication authentication,
             @RequestBody @Valid CreateOrderRequestDto requestDto
     ) {
-        User user = (User) authentication.getPrincipal();
-        return orderService.createOrder(user, requestDto);
+        return orderService.createOrder(getAuthenticatedUser(authentication), requestDto);
     }
 
     @Operation(summary = "Update order status",
             description = "Update status by order id, current options: "
-                + "DELIVERED, PENDING, COMPLETED")
+            + "DELIVERED, PENDING, COMPLETED")
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
     public OrderResponseDto updateOrderStatusById(
@@ -93,7 +90,12 @@ public class OrderController {
             @PathVariable Long id,
             @RequestBody @Valid UpdateOrderRequestDto requestDto
     ) {
-        User user = (User) authentication.getPrincipal();
-        return orderService.updateOrderStatusById(user, id, requestDto);
+
+        return orderService.updateOrderStatusById(
+                getAuthenticatedUser(authentication), id, requestDto);
+    }
+
+    private User getAuthenticatedUser(Authentication authentication) {
+        return (User) authentication.getPrincipal();
     }
 }

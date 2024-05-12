@@ -39,8 +39,7 @@ public class ShoppingCartController {
             Authentication authentication,
             @RequestBody @Valid CreateCartItemRequestDto requestDto
     ) {
-        User user = (User) authentication.getPrincipal();
-        return shoppingCartService.addCartItem(user.getId(), requestDto);
+        return shoppingCartService.addCartItem(getAuthenticatedUser(authentication), requestDto);
     }
 
     @Operation(summary = "Get all shopping cart's items",
@@ -48,8 +47,7 @@ public class ShoppingCartController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping
     public ShoppingCartResponseDto getAllCartItems(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return shoppingCartService.getByUserId(user.getId());
+        return shoppingCartService.getByUserId(getAuthenticatedUser(authentication));
     }
 
     @Operation(summary = "Update cart item by id",
@@ -61,8 +59,8 @@ public class ShoppingCartController {
             @PathVariable Long cartItemId,
             @RequestBody @Valid UpdateCartItemRequestDto requestDto
     ) {
-        User user = (User) authentication.getPrincipal();
-        return shoppingCartService.updateCartItem(user.getId(), cartItemId, requestDto);
+        return shoppingCartService.updateCartItem(
+                getAuthenticatedUser(authentication), cartItemId, requestDto);
     }
 
     @Operation(summary = "Delete cart item by id",
@@ -74,7 +72,11 @@ public class ShoppingCartController {
             Authentication authentication,
             @PathVariable Long cartItemId
     ) {
+        shoppingCartService.deleteCartItem(getAuthenticatedUser(authentication), cartItemId);
+    }
+
+    private Long getAuthenticatedUser(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        shoppingCartService.deleteCartItem(user.getId(), cartItemId);
+        return user.getId();
     }
 }
