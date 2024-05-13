@@ -7,6 +7,7 @@ import com.example.dto.book.CreateUpdateBookRequestDto;
 import com.example.exception.EntityNotFoundException;
 import com.example.model.Book;
 import com.example.model.Category;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,7 +22,11 @@ public interface BookMapper {
     @Mapping(target = "categoryIds", ignore = true)
     BookDto toDto(Book book);
 
+    List<BookDto> toDto(List<Book> books);
+
     BookDtoWithoutCategoryIds toDtoWithoutCategories(Book book);
+
+    List<BookDtoWithoutCategoryIds> toDtoWithoutCategories(List<Book> book);
 
     @Mapping(target = "categories", ignore = true)
     Book toModel(CreateUpdateBookRequestDto createUpdateBookRequestDto);
