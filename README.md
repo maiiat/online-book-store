@@ -29,7 +29,7 @@ This project uses a suite of advanced technologies and frameworks:
 
 ## Setup and Usage
 
-1. **Clone the repository:**
+1. **Clone the repository (make sure you have JDK installed):**
    ```bash
    git clone https://github.com/maiiat/online-book-store.git
    ```
@@ -47,7 +47,7 @@ This project uses a suite of advanced technologies and frameworks:
    ```
 5. **Access the application at:** `http://localhost:8080`
 
-Alternatively, use Docker:
+Alternatively, use Docker (make sure you have Docker installed):
    ```bash
    docker-compose up
    ```
@@ -57,6 +57,12 @@ Alternatively, use Docker:
 - **Security Implementation**: Integrated Spring Security and JWT to secure the application.
 - **Database Management**: Used Liquibase to handle database schema changes smoothly.
 - **Exception Handling**: Implemented servlet layer handling for JWT expiration to enhance security and user experience.
+
+## Swagger
+
+**Swagger is available for testing at http://localhost:8080/swagger-ui/index.html**
+
+![img.png](book-store-swagger.png)
 
 ## Postman Collection
 
